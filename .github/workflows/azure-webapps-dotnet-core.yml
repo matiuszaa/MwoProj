@@ -19,11 +19,6 @@
 
 name: CD deploy to Azure 
 
-env:
-  AZURE_WEBAPP_NAME: MwoWebApp    # set this to the name of your Azure Web App
-  AZURE_WEBAPP_PACKAGE_PATH: './P01WebAPI.sln'      # set this to the path to your web app project, defaults to the repository root
-  DOTNET_VERSION: '6.0.100'                 # set this to the .NET Core version to use
-
 on:
   push:
     branches: [ "main" ]
@@ -42,7 +37,7 @@ jobs:
       - name: Set up .NET Core
         uses: actions/setup-dotnet@v3.0.0
         with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
+          dotnet-version: 6.0.100
 
       - name: Set up dependency caching for faster builds
         uses: actions/cache@v3
@@ -56,7 +51,7 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+        run: dotnet publish ./P01WebAPI/P01WebAPI.csproj -c Release -o ${{env.DOTNET_ROOT}}/myapp
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
@@ -86,4 +81,3 @@ jobs:
         with:
           app-name: 'apiArtifact-dev'
           publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
-          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
