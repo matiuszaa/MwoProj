@@ -17,7 +17,7 @@
 # For more information on the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # For more samples to get started with GitHub Action workflows to deploy to Azure: https://github.com/Azure/actions-workflow-samples
 
-name: Build and deploy ASP.Net Core app to an Azure Web App
+name: CD deploy to Azure 
 
 env:
   AZURE_WEBAPP_NAME: MwoWebApp    # set this to the name of your Azure Web App
@@ -67,11 +67,10 @@ jobs:
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v1.0.4
         with:
-          # Path of the directory containing the static assets.
+          name: apiArtifact
           path: ./P01WebAPI # default is _site/
-          # Duration after which artifact will expire in days.
 
-  deploy:
+  deploy-dev:
     permissions:
       contents: none
     runs-on: ubuntu-latest
@@ -84,12 +83,12 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: apiArtifact
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{ env.AZURE_WEBAPP_NAME }}
-          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+          app-name: 'apiArtifact-dev'
+          publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE_DEV }}
           package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
