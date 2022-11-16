@@ -61,14 +61,9 @@ jobs:
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
-          
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v1.0.4
-        with:
           name: apiArtifact
-          path: ./P01WebAPI # default is _site/
+          path: ${{env.DOTNET_ROOT}}/myapp
+        
 
   deploy-dev:
     permissions:
